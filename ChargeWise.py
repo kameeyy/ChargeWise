@@ -32,7 +32,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 @st.cache_resource
-def load_ml_model(path="models (1).pkl"):
+def load_ml_model(path="models (2).pkl"):
     """Loads the pre-trained ML model only once."""
     try:
         # Load the model using joblib as specified in your imports
