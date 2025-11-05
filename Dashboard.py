@@ -169,7 +169,7 @@ def ensure_parquet():
         df.to_parquet(parquet_path, index=False)
         st.success("Parquet file created successfully!")
     else:
-        st.info("Parquet file already exists. Skipping conversion.")
+        st.info("File Existed")
         
     return parquet_path
 
