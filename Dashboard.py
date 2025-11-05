@@ -12,6 +12,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+st.sidebar.image("logo(RemoveBg).png", use_container_width=True)
+
 
 # PAGE STYLING
 def add_styles():
@@ -21,7 +23,8 @@ def add_styles():
         .main {
             background-color: #cccdcc;
             color: #272726;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
+            //font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
 
         /* Header */
@@ -30,7 +33,7 @@ def add_styles():
             padding: 1.2rem 2rem;
             border-radius: 15px;
             color: white;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         .main-header h1 {
@@ -141,7 +144,7 @@ def add_styles():
 
 add_styles()
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
 
@@ -252,7 +255,7 @@ with tab1:
 
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Avg Charging Duration", f"{filtered_df['Charging_Duration'].mean():.2f} s")
+    col1.metric("Avg Charging Duration", f"{filtered_df['Charging_Duration'].mean():.2f} ")
     col2.metric("Avg Operating Temp", f"{filtered_df['Battery_Operating_Temperature'].mean():.2f} °C")
     col3.metric("Avg Energy Consumed", f"{filtered_df['Total_Energy_Consumed'].mean():.4f} Wh")
     col4.metric("Predicted Capacity", f"{filtered_df['Predicted_Capacity'].mean():.2f} %")
@@ -265,18 +268,27 @@ with tab1:
         avg_duration_device = filtered_df.groupby('Device_ID')['Charging_Duration'].mean().reset_index()
         chart1 = alt.Chart(avg_duration_device).mark_bar(color='#6EC5E9').encode(
             x=alt.X('Device_ID:N', title='Device ID'),
-            y=alt.Y('Charging_Duration:Q', title='Charging Duration (s)'),
+            y=alt.Y('Charging_Duration:Q', title='Charging Duration'),
             tooltip=['Device_ID', 'Charging_Duration']
         )
         st.altair_chart(chart1, use_container_width=True)
 
+    
     with col2:
-        energy_device = filtered_df.groupby('Device_ID')['Total_Energy_Consumed'].sum().reset_index()
-        chart_energy = alt.Chart(energy_device).mark_bar(color='#E97171').encode(
-            x=alt.X('Device_ID:N', title='Device ID'),
-            y=alt.Y('Total_Energy_Consumed:Q', title='Total Energy Consumed (Wh)'),
-            tooltip=['Device_ID', 'Total_Energy_Consumed']
+        energy_device = df.groupby('Device_ID')['Total_Energy_Consumed'].sum().reset_index()
+        energy_device = energy_device[energy_device['Total_Energy_Consumed'] > 0]
+
+        chart_energy = (
+            alt.Chart(energy_device)
+            .mark_bar(color='#E97171')
+            .encode(
+                x=alt.X('Device_ID:N', title='Device ID'),
+                y=alt.Y('Total_Energy_Consumed:Q', title='Total Energy Consumed (Wh)'),
+                tooltip=['Device_ID', 'Total_Energy_Consumed']
+            )
         )
+
+
         st.altair_chart(chart_energy, use_container_width=True)
 
     st.divider()
@@ -290,7 +302,7 @@ with tab2:
     col1, col2 = st.columns(2)
     with col1:
         scatter1 = alt.Chart(filtered_df).mark_circle(size=60, opacity=0.6).encode(
-            x=alt.X('Charging_Duration:Q', title='Charging Duration (s)'),
+            x=alt.X('Charging_Duration:Q', title='Charging Duration'),
             y=alt.Y('Mean_Temperature:Q', title='Mean Temperature (°C)'),
             color='Device_ID:N',
             tooltip=['Device_ID', 'Charging_Duration', 'Mean_Temperature']
@@ -336,7 +348,7 @@ with tab3:
             .encode(
                 x=alt.X(
                     'Importance:Q',
-                    title='Importance',
+                    title='Importance (%)',
                     scale=alt.Scale(domain=[0, float(feat_importances['Importance'].max()) + 0.05]),  # tighter x-axis
                     axis=alt.Axis(labelFontSize=12, titleFontSize=13, grid=False)
                 ),
