@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.sidebar.image(os.path.join(os.path.dirname(__file__), "logo(RemoveBg).png"), use_container_width=True)
+st.sidebar.image(os.path.join(os.path.dirname(__file__), "Logo(RemoveBg).png"), use_container_width=True)
 
 
 # PAGE STYLING
