@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.sidebar.image("logo(RemoveBg).png", use_container_width=True)
+st.sidebar.image(os.path.join(os.path.dirname(__file__), "logo(RemoveBg).png"), use_container_width=True)
 
 
 # PAGE STYLING
@@ -164,7 +164,7 @@ def ensure_parquet():
         # st.info("Converting CSV to Parquet for faster loading...")
         df = pd.read_csv(csv_path)
 
-        # 🧹 Fix mixed-type columns that cause Arrow conversion errors
+        # Fix mixed-type columns that cause Arrow conversion errors
         for col in df.columns:
             if df[col].dtype == 'object':
                 df[col] = df[col].astype(str)
@@ -198,6 +198,14 @@ def load_data(path):
 parquet_path = ensure_parquet()
 rf_model = load_model()
 df = load_data(parquet_path)
+
+
+# Denormalize (Unscale) Charging Duration
+max_normalised_value = 0.7        # max normalized value from dataset
+assumed_max_minutes = 120         # assumed max real charging time in minutes
+
+scaling_factor = assumed_max_minutes / max_normalised_value
+df['Unscaled_Charging_Duration'] = df['Charging_Duration'] * scaling_factor
 
 
 ML_FEATURES = ['Charging_Duration', 'Mean_Charging_Current',
@@ -249,13 +257,13 @@ tab1, tab2, tab3, tab4 = st.tabs([
 
 # PAGE 1: OVERVIEW DASHBOARD
 with tab1:
-    st.header("🔎Overview Dashboard")
+    st.header("Overview Dashboard")
     st.divider()
     
 
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Avg Charging Duration", f"{filtered_df['Charging_Duration'].mean():.2f} ")
+    col1.metric("Avg Charging Duration", f"{filtered_df['Unscaled_Charging_Duration'].mean():.2f} min")
     col2.metric("Avg Operating Temp", f"{filtered_df['Battery_Operating_Temperature'].mean():.2f} °C")
     col3.metric("Avg Energy Consumed", f"{filtered_df['Total_Energy_Consumed'].mean():.4f} Wh")
     col4.metric("Predicted Capacity", f"{filtered_df['Predicted_Capacity'].mean():.2f} %")
@@ -265,12 +273,13 @@ with tab1:
 
     col1, col2 = st.columns(2)
     with col1:
-        avg_duration_device = filtered_df.groupby('Device_ID')['Charging_Duration'].mean().reset_index()
+        avg_duration_device = filtered_df.groupby('Device_ID')['Unscaled_Charging_Duration'].mean().reset_index()
         chart1 = alt.Chart(avg_duration_device).mark_bar(color='#6EC5E9').encode(
-            x=alt.X('Device_ID:N', title='Device ID'),
-            y=alt.Y('Charging_Duration:Q', title='Charging Duration'),
-            tooltip=['Device_ID', 'Charging_Duration']
-        )
+        x=alt.X('Device_ID:N', title='Device ID'),
+        y=alt.Y('Unscaled_Charging_Duration:Q', title='Avg Charging Duration (min)'),
+        tooltip=['Device_ID', 'Unscaled_Charging_Duration']
+    )
+
         st.altair_chart(chart1, use_container_width=True)
 
     
@@ -302,7 +311,7 @@ with tab2:
     col1, col2 = st.columns(2)
     with col1:
         scatter1 = alt.Chart(filtered_df).mark_circle(size=60, opacity=0.6).encode(
-            x=alt.X('Charging_Duration:Q', title='Charging Duration'),
+            x=alt.X('Unscaled_Charging_Duration:Q', title='Charging Duration (min)'),
             y=alt.Y('Mean_Temperature:Q', title='Mean Temperature (°C)'),
             color='Device_ID:N',
             tooltip=['Device_ID', 'Charging_Duration', 'Mean_Temperature']
