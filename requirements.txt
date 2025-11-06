@@ -4,4 +4,4 @@ numpy
 altair
 joblib
 scikit-learn
-
+matplotlib
