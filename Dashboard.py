@@ -336,6 +336,8 @@ with tab2:
     st.dataframe(corr.style.background_gradient(cmap='RdYlGn', axis=None))
 
 
+# Convert feature importances from fraction to percentage
+feat_importances['Importance'] = feat_importances['Importance'] * 100
 
 # PAGE 3: MODEL & PREDICTIONS
 with tab3:
