@@ -336,8 +336,6 @@ with tab2:
     st.dataframe(corr.style.background_gradient(cmap='RdYlGn', axis=None))
 
 
-# Convert feature importances from fraction to percentage
-feat_importances['Importance'] = feat_importances['Importance'] * 100
 
 # PAGE 3: MODEL & PREDICTIONS
 with tab3:
@@ -352,6 +350,10 @@ with tab3:
         }).sort_values('Importance', ascending=True)
                 # Clean feature names
         feat_importances['Feature'] = feat_importances['Feature'].str.replace('_', ' ')
+        
+        # Convert feature importances from fraction to percentage
+        feat_importances['Importance'] = feat_importances['Importance'] * 100
+
 
         # Create feature importance chart (improved aesthetics)
         chart_feat = (
