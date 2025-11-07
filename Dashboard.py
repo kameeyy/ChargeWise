@@ -261,12 +261,15 @@ with tab1:
     
 
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     col1.metric("Avg Charging Duration", f"{int((m:=filtered_df['Unscaled_Charging_Duration'].mean()))}m {int(round((m % 1)*60))}s") #Changes by Daniel
     #col1.metric("Avg Charging Duration", f"{filtered_df['Unscaled_Charging_Duration'].mean():.2f} min")
     col2.metric("Avg Operating Temp", f"{filtered_df['Battery_Operating_Temperature'].mean():.2f} °C")
     col3.metric("Avg Energy Consumed", (lambda x: f"{x * 1000:.3f} mWh" if x < 0.001 else f"{x / 1000:.3f} kWh" if x >= 1000 else f"{x:.3f} Wh")(filtered_df['Total_Energy_Consumed'].mean())) #Changes by Daniel
     #col3.metric("Avg Energy Consumed", f"{filtered_df['Total_Energy_Consumed'].mean():.4f} Wh")
+    #col4.metric("Predicted Capacity", f"{filtered_df['Predicted_Capacity'].mean():.2f} %")
+
+    col4 = st.columns(1)
     col4.metric("Predicted Capacity", f"{filtered_df['Predicted_Capacity'].mean():.2f} %")
 
     st.divider()
