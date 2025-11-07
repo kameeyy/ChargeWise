@@ -207,7 +207,6 @@ assumed_max_minutes = 120         # assumed max real charging time in minutes
 scaling_factor = assumed_max_minutes / max_normalised_value
 df['Unscaled_Charging_Duration'] = df['Charging_Duration'] * scaling_factor
 
-
 ML_FEATURES = ['Charging_Duration', 'Mean_Charging_Current',
                'Mean_Temperature', 'Total_Energy_Consumed', 'Cycle_Progress']
 
@@ -263,7 +262,8 @@ with tab1:
 
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Avg Charging Duration", f"{filtered_df['Unscaled_Charging_Duration'].mean():.2f} min")
+    col1.metric("Avg Charging Duration", f"{int((m:=filtered_df['Unscaled_Charging_Duration_Minutes'].mean()))}m {int(round((m % 1)*60))}s"
+    #col1.metric("Avg Charging Duration", f"{filtered_df['Unscaled_Charging_Duration'].mean():.2f} min")
     col2.metric("Avg Operating Temp", f"{filtered_df['Battery_Operating_Temperature'].mean():.2f} °C")
     col3.metric("Avg Energy Consumed", f"{filtered_df['Total_Energy_Consumed'].mean():.4f} Wh")
     col4.metric("Predicted Capacity", f"{filtered_df['Predicted_Capacity'].mean():.2f} %")
