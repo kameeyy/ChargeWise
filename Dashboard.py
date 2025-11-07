@@ -42,7 +42,7 @@ def add_styles():
             text-align: center;
         }
 
-        /* Metric cards
+        /* Metric cards */
         [data-testid="stMetric"] {
         background-color: #519748 !important;   /* green background */
         color: white !important;                /* white text */
@@ -51,30 +51,7 @@ def add_styles():
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
         text-align: center;
         margin: 5px;
-    } */
-    /* Top row: gray cards */
-    div[data-testid="metric-container"]:nth-of-type(1),
-    div[data-testid="metric-container"]:nth-of-type(2),
-    div[data-testid="metric-container"]:nth-of-type(3) {
-        background-color: #808080 !important;  /* gray */
-        color: white !important;
-        padding: 1.2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-        text-align: center;
-        margin: 5px;
-    }
-
-    /* Bottom row: green card */
-    div[data-testid="metric-container"]:nth-of-type(4) {
-        background-color: #519748 !important;  /* green */
-        color: white !important;
-        padding: 1.2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-        text-align: center;
-        margin: 5px;
-    }
+    } 
 
     [data-testid="stMetricLabel"] {
         color: white !important;                /* metric label color */
