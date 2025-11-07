@@ -269,7 +269,7 @@ with tab1:
     #col3.metric("Avg Energy Consumed", f"{filtered_df['Total_Energy_Consumed'].mean():.4f} Wh")
     #col4.metric("Predicted Capacity", f"{filtered_df['Predicted_Capacity'].mean():.2f} %")
 
-    col4 = st.columns(1)
+    col4 = st.columns(1)[0]
     col4.metric("Predicted Capacity", f"{filtered_df['Predicted_Capacity'].mean():.2f} %")
 
     st.divider()
