@@ -363,7 +363,7 @@ with tab3:
                 x=alt.X(
                     'Importance:Q',
                     title='Importance (%)',
-                    scale=alt.Scale(domain=[0, float(feat_importances['Importance'].max()) + 0.05]),  # tighter x-axis
+                    scale=alt.Scale(domain=[0, float(feat_importances['Importance'].max()) + 20]),  # tighter x-axis
                     axis=alt.Axis(labelFontSize=12, titleFontSize=13, grid=False)
                 ),
                 y=alt.Y(
